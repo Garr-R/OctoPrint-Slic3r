@@ -263,7 +263,7 @@ class Slic3rPlugin(octoprint.plugin.SlicerPlugin,
       profile_path = self._settings.get(["default_profile"])
     if not machinecode_path:
       path, _ = os.path.splitext(model_path)
-      machinecode_path = path + ".gco"
+      machinecode_path = path + ".gcode"
     
     if position and isinstance(position, dict) and "x" in position and "y" in position:
       posX = position["x"]
