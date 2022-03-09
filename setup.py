@@ -8,7 +8,7 @@ plugin_package = "octoprint_slic3r"
 
 # The plugin's human readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
 # plugin module
-plugin_name = "OctoPrint-Slic3r"
+plugin_name = "MG-OctoPrint-Slic3r"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
 plugin_version = "2.0.1"
@@ -18,10 +18,10 @@ plugin_version = "2.0.1"
 plugin_description = """Adds support for slicing via Slic3r from within OctoPrint"""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
-plugin_author = "Garrett Broters <gbroters@gmail.com>"
+plugin_author = "N/a"
 
 # The plugin's author's mail address.
-plugin_author_email = "gbroters@gmail.com"
+plugin_author_email = "Gbroters@Gmail.com"
 
 # The plugin's homepage URL. Can be overwritten within OctoPrint's internal data via __plugin_url__ in the plugin module
 plugin_url = "https://github.com/Garr-R/OctoPrint-Slic3r"
