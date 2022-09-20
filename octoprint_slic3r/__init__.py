@@ -262,7 +262,7 @@ class Slic3rPlugin(octoprint.plugin.SlicerPlugin,
       profile_path = self._settings.get(["default_profile"])
     if not machinecode_path:
       path, _ = os.path.splitext(model_path)
-      machinecode_path = path + ".gco"
+      machinecode_path = path + ".gcode"
     
     if position and isinstance(position, dict) and "x" in position and "y" in position:
       posX = position["x"]
@@ -280,7 +280,7 @@ class Slic3rPlugin(octoprint.plugin.SlicerPlugin,
     if not executable:
       return False, "Path to Slic3r is not configured "
 
-    args = ['"%s"' % executable, '--load', '"%s"' % profile_path, '--print-center', '"%f,%f"' % (posX, posY), '-o', '"%s"' % machinecode_path, '"%s"' % model_path]
+    args = ['"%s"' % executable, '--load', '"%s"' % profile_path, '--center', '"%f,%f"' % (posX, posY), '-o', '"%s"' % machinecode_path, '"%s"' % model_path]
     env = {}
     
     try:
