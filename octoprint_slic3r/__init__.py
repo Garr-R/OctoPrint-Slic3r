@@ -19,7 +19,6 @@ from octoprint.util.paths import normalize as normalize_path
 
 from .profile import Profile
 
-blueprint = flask.Blueprint("plugin.slic3r", __name__)
 
 def get_analysis_from_gcode(machinecode_path):
   """Extracts the analysis data structure from the gocde.
@@ -263,7 +262,7 @@ class Slic3rPlugin(octoprint.plugin.SlicerPlugin,
       profile_path = self._settings.get(["default_profile"])
     if not machinecode_path:
       path, _ = os.path.splitext(model_path)
-      machinecode_path = path + ".gcode"
+      machinecode_path = path + ".gco"
     
     if position and isinstance(position, dict) and "x" in position and "y" in position:
       posX = position["x"]
@@ -281,16 +280,26 @@ class Slic3rPlugin(octoprint.plugin.SlicerPlugin,
     if not executable:
       return False, "Path to Slic3r is not configured "
 
-    args = ['"%s"' % executable, '--export-gcode', '--center', '"%f,%f"' % (posX, posY), '--load', '"%s"' % profile_path, '-o', '"%s"' % machinecode_path, '"%s"' % model_path]
+    args = ['"%s"' % executable, '--load', '"%s"' % profile_path, '--print-center', '"%f,%f"' % (posX, posY), '-o', '"%s"' % machinecode_path, '"%s"' % model_path]
     env = {}
     
     try:
       import subprocess
 
       help_process = subprocess.Popen((executable, '--help'), stdout=subprocess.PIPE)
-      help_text = help_process.communicate()[0]
+      help_text_all = help_process.communicate()
+      
+      # help output includes a trace statement now on the first line. If we find it, use the second
+      # line instead
+      # [2022-04-22 21:44:51.396082] [0x75527010] [trace]   Initializing StaticPrintConfigs
+      if help_text_all[0].find(b'trace') >= 0:
+        help_text = help_text_all[1]
+      else:
+        help_text = help_text_all[0]
 
-      if help_text.startswith(b'PrusaSlicer-2.3'):
+      self._logger.debug(help_text)
+
+      if help_text.startswith(b'PrusaSlicer-2.3') or help_text.startswith(b'PrusaSlicer-2.4'):
         args = ['"%s"' % executable, '-g --load', '"%s"' % profile_path, '--center', '"%f,%f"' % (posX, posY), '-o', '"%s"' % machinecode_path, '"%s"' % model_path]
         env['SLIC3R_LOGLEVEL'] = "9"
         self._logger.info("Running Prusa Slic3r >= 2.3")
